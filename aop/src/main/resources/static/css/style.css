@@ -1,0 +1,74 @@
+@charset "utf-8";
+html{height:100%;}
+body{
+	background:#090b44; /* Old browsers */
+	background:-moz-radial-gradient(center, ellipse cover, #090b44 0%, #00001c 100%); /* FF3.6+ */
+	background:-webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#090b44), color-stop(100%,#00001c)); /* Chrome,Safari4+ */
+	background:-webkit-radial-gradient(center, ellipse cover, #090b44 0%,#00001c 100%); /* Chrome10+,Safari5.1+ */
+	background:-o-radial-gradient(center, ellipse cover, #090b44 0%,#00001c 100%); /* Opera 12+ */
+	background:-ms-radial-gradient(center, ellipse cover, #090b44 0%,#00001c 100%); /* IE10+ */
+	background:radial-gradient(ellipse at center, #090b44 0%,#00001c 100%); /* W3C */
+	filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#090b44', endColorstr='#00001c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	padding:0;
+	text-align:center;
+	font-family:'open sans';
+	position:relative;
+	margin:0;
+	height:100%;
+	padding-bottom:50px;
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+a{text-decoration:none;}
+canvas{display:block;width:100%;height:100%;top:0;left:0;position:fixed;pointer-events: none}
+canvas.flare{opacity:0.5;}
+.title_div{width: 70%;
+	height: 80%;
+	left:140px;
+	top: 250px;
+	line-height: 30px;
+	text-align: center;
+	color:white;
+	background-color:rgba(247,253,253,0.2);}
+.class_div{
+	width: 70%;
+	height: 80%;
+}
+.l-custom-input{
+	position: relative;
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+.l-custom-input label {
+	position: absolute;
+	left:0;
+	bottom:0;
+	font-size:18px;
+	font-weight: 400;
+	color: #9e9e9e;
+	font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial,sans-serif;
+	transition: bottom .2s;
+}
+#l-input{
+	border: none;
+	width: 100%;
+	display: block;
+	padding: 12px 12px 2px 6px;
+	font-size: 16px;
+	background: none;
+	color: #000;
+	text-indent: 0;
+	border-bottom: 1px solid #e0e0e0;
+}
+#l-input:focus {
+	outline: none;
+	border-bottom: 1px solid #2196f3;
+
+}
+#l-input:focus+label {
+	bottom:30px;
+	color:#2196f3;
+
+}
+

@@ -1,0 +1,141 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>简易聊天室</title>
+    <style>
+        #message{
+            margin-top:40px;
+            border:1px solid gray;
+            padding:20px;
+        }
+    </style>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.let_it_snow.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $("canvas.flare").let_it_snow({
+                windPower: 0,
+                speed: 0,
+                color: "#392F52",
+                size:120,
+                opacity: 0.00000001,
+                count: 40,
+                interaction: false
+            });
+
+            $("canvas.snow").let_it_snow({
+                windPower: 3,
+                speed: 1,
+                count: 250,
+                size: 0
+            });
+
+            $("canvas.flake").let_it_snow({
+                windPower: -3,
+                speed: 1,
+                count: 20,
+                size: 10,
+                image: "images/white-snowflake.png"
+            });
+
+        });
+    </script>
+
+</head>
+<body>
+
+<div style="position: relative;">
+<div style=" width: 100%; height: 100%; position: absolute;">
+    <canvas width="100%" height="100%"  class="flare"></canvas>
+    <canvas width="100%" height="100%"  class="snow"></canvas>
+    <canvas width="100%" height="100%"  class="flake"></canvas>
+</div>
+<div style="position:absolute;" class="title_div">
+    <label for="nickname">昵称</label>
+    <input size="large" id="nickname"/>
+
+    <button onclick="conectWebSocket()">连接WebSocket</button>
+    <button onclick="closeWebSocket()">断开连接</button>
+    <hr />
+    <br />
+
+    消息：<input id="text" type="text" />
+    频道号：<input id="toUser" type="text" />
+    <button onclick="send()">发送消息</button>
+    <div id="message"></div>
+</div>
+</div>
+</body>
+<script type="text/javascript">
+    var websocket = null;
+    function conectWebSocket(){
+        var nickname = document.getElementById("nickname").value;
+        if(nickname===""){
+            alert("请输入昵称");
+            return;
+        }
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket'in window) {
+            websocket = new WebSocket("ws://115.159.30.241:8081/websocket/"+nickname);
+        } else {
+            alert('Not support websocket')
+        }
+        //连接发生错误的回调方法
+        websocket.onerror = function() {
+            setMessageInnerHTML("error");
+        };
+        //连接成功建立的回调方法
+        websocket.onopen = function(event) {
+            var socketMsg = {msg:""};
+            socketMsg.msg="Loc MSG:"+nickname+"进入房间";
+            websocket.send(JSON.stringify(socketMsg));
+         //   setMessageInnerHTML("Loc MSG:"+nickname+"成功建立连接");
+
+        }
+        //接收到消息的回调方法
+        websocket.onmessage = function(event) {
+            setMessageInnerHTML(event.data);
+        }
+        //连接关闭的回调方法
+        websocket.onclose = function() {
+            setMessageInnerHTML("Loc MSG:关闭连接");
+        }
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function() {
+            websocket.close();
+        }
+    }
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+    //关闭连接
+    function closeWebSocket() {
+        var socketMsg = {msg:""};
+        socketMsg.msg="Loc MSG:离开房间";
+        websocket.send(JSON.stringify(socketMsg));
+        websocket.close();
+    }
+    //发送消息
+
+    //发送消息
+    function send() {
+        //获取输入的文本信息进行发送
+        var message = document.getElementById('text').value;
+        var toUser = document.getElementById('toUser').value;
+        var socketMsg = {msg:message,toUser:toUser,type:0};
+        if(toUser == ''){
+            //群聊.
+            socketMsg.type = 0;
+        }else{
+            //单聊.
+            socketMsg.type = 1;
+        }
+        websocket.send(JSON.stringify(socketMsg));
+    }
+</script>
+</html>
